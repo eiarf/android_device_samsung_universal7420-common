@@ -436,4 +436,12 @@ Add a comment to this line
          level 2) and High about 72%. At 255, Medium was stock's maximum and
          High could not go above it. -->
     <integer name="config_defaultVibrationAmplitude">153</integer>
+
+    <!-- Keep the wallpaper 1:1 and undimmed. DECON shows the bottom layer
+         itself only unscaled (G0/G1 have no scaler) and without plane alpha
+         (window 0 cannot blend with the background). The default 1.10 zoom
+         at rest and the 5% dim of dark wallpapers kept the wallpaper, and
+         with it every Launcher and Recents frame, on the GPU. -->
+    <item name="config_wallpaperMaxScale" format="float" type="dimen">1.0</item>
+    <item name="config_wallpaperDimAmount" format="float" type="dimen">0.0</item>
 </resources>
