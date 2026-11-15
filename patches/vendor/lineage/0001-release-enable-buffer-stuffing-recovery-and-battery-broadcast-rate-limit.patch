@@ -1,0 +1,108 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: FAROVITUS <farovitus@gmail.com>
+Date: Sun, 15 Nov 2026 16:07:31 +0200
+Subject: [PATCH] release: enable buffer stuffing recovery and battery
+ broadcast rate limit
+
+My zeroflte build (Exynos 7420, Lineage 22.2) runs into both problems
+these Android 16 flags fix, and the code behind them is already in the
+22.2 tree, only switched off.
+
+android.view.flags.buffer_stuffing_recovery: SurfaceFlinger already
+reports the queued buffer count of a stuffed ViewRootImpl layer in the
+vsync event, and Choreographer already reacts to it, but ViewRootImpl only
+marks its layer recoverable when the flag is on. Without it a single late
+frame in a continuous animation leaves one extra buffer queued for good:
+UiBench RenderingJitter sits at 4 refreshes of latency (Total about 36 ms,
+dequeue about 11 ms) instead of 3 (about 18.5 ms) while SurfaceFlinger
+presents every frame on time.
+
+com.android.server.flags.rate_limit_battery_changed_broadcast:
+BatteryService broadcasts ACTION_BATTERY_CHANGED for every new millivolt.
+On this phone each broadcast costs SystemUI tens of milliseconds of CPU on
+the small cores and a status bar frame miss. With the flag, a voltage-only
+change is sent only when it moved at least 1 % and 20 s have passed, and a
+temperature-only change only when it moved at least 1 degree C.
+
+Both are fixed read-only flags, so this takes a framework rebuild. Not
+built or tested yet.
+
+Signed-off-by: FAROVITUS <farovitus@gmail.com>
+---
+ release/aconfig/bp1a/Android.bp                            | 2 ++
+ release/aconfig/bp1a/android.view.flags/Android.bp         | 7 +++++++
+ .../buffer_stuffing_recovery_flag_values.textproto         | 6 ++++++
+ release/aconfig/bp1a/com.android.server.flags/Android.bp   | 7 +++++++
+ ...e_limit_battery_changed_broadcast_flag_values.textproto | 6 ++++++
+ 5 files changed, 28 insertions(+)
+ create mode 100644 release/aconfig/bp1a/android.view.flags/Android.bp
+ create mode 100644 release/aconfig/bp1a/android.view.flags/buffer_stuffing_recovery_flag_values.textproto
+ create mode 100644 release/aconfig/bp1a/com.android.server.flags/Android.bp
+ create mode 100644 release/aconfig/bp1a/com.android.server.flags/rate_limit_battery_changed_broadcast_flag_values.textproto
+
+diff --git a/release/aconfig/bp1a/Android.bp b/release/aconfig/bp1a/Android.bp
+index 15e8822..b7b11e3 100644
+--- a/release/aconfig/bp1a/Android.bp
++++ b/release/aconfig/bp1a/Android.bp
+@@ -17,6 +17,8 @@ aconfig_value_set {
+     name: "aconfig_value_set-lineage-bp1a",
+     values: [
+         "aconfig-values-bp1a-android.hardware.biometrics-all",
++        "aconfig-values-bp1a-android.view.flags-all",
++        "aconfig-values-bp1a-com.android.server.flags-all",
+         "aconfig-values-bp1a-com.android.window.flags-all",
+     ],
+ }
+diff --git a/release/aconfig/bp1a/android.view.flags/Android.bp b/release/aconfig/bp1a/android.view.flags/Android.bp
+new file mode 100644
+index 0000000..e00c699
+--- /dev/null
++++ b/release/aconfig/bp1a/android.view.flags/Android.bp
+@@ -0,0 +1,7 @@
++aconfig_values {
++    name: "aconfig-values-bp1a-android.view.flags-all",
++    package: "android.view.flags",
++    srcs: [
++        "*_flag_values.textproto",
++    ],
++}
+diff --git a/release/aconfig/bp1a/android.view.flags/buffer_stuffing_recovery_flag_values.textproto b/release/aconfig/bp1a/android.view.flags/buffer_stuffing_recovery_flag_values.textproto
+new file mode 100644
+index 0000000..dbd1642
+--- /dev/null
++++ b/release/aconfig/bp1a/android.view.flags/buffer_stuffing_recovery_flag_values.textproto
+@@ -0,0 +1,6 @@
++flag_value {
++  package: "android.view.flags"
++  name: "buffer_stuffing_recovery"
++  state: ENABLED
++  permission: READ_ONLY
++}
+diff --git a/release/aconfig/bp1a/com.android.server.flags/Android.bp b/release/aconfig/bp1a/com.android.server.flags/Android.bp
+new file mode 100644
+index 0000000..84813a9
+--- /dev/null
++++ b/release/aconfig/bp1a/com.android.server.flags/Android.bp
+@@ -0,0 +1,7 @@
++aconfig_values {
++    name: "aconfig-values-bp1a-com.android.server.flags-all",
++    package: "com.android.server.flags",
++    srcs: [
++        "*_flag_values.textproto",
++    ],
++}
+diff --git a/release/aconfig/bp1a/com.android.server.flags/rate_limit_battery_changed_broadcast_flag_values.textproto b/release/aconfig/bp1a/com.android.server.flags/rate_limit_battery_changed_broadcast_flag_values.textproto
+new file mode 100644
+index 0000000..1139630
+--- /dev/null
++++ b/release/aconfig/bp1a/com.android.server.flags/rate_limit_battery_changed_broadcast_flag_values.textproto
+@@ -0,0 +1,6 @@
++flag_value {
++  package: "com.android.server.flags"
++  name: "rate_limit_battery_changed_broadcast"
++  state: ENABLED
++  permission: READ_ONLY
++}
+-- 
+2.54.0 (Apple Git-157)
+
