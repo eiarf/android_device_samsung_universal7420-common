@@ -359,6 +359,7 @@ PRODUCT_SOONG_NAMESPACES += \
 	hardware/samsung \
 	hardware/google/interfaces \
 	hardware/google/pixel \
+	hardware/google/pixel/power-libperfmgr \
 	hardware/samsung_slsi-linaro/exynos/cpboot
 
 # Stagefright shim
