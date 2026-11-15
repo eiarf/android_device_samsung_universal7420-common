@@ -84,7 +84,7 @@ TARGET_USERIMAGES_USE_F2FS := true
 PRODUCT_ENFORCE_VINTF_MANIFEST_OVERRIDE := true
 
 # Kernel
-# The 6.6 kernel is built outside the ROM (SM_G920F ./build.sh --zip);
+# The 6.18 kernel is built outside the ROM (SM_G920F ./build.sh --zip);
 # prebuilt/ holds its Image and the dtbTool DT image S-Boot reads from
 # the boot image's dt slot.
 TARGET_KERNEL_ARCH := arm64
