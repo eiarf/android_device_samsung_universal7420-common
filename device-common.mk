@@ -358,6 +358,7 @@ PRODUCT_SOONG_NAMESPACES += \
 	hardware/google/interfaces \
 	hardware/google/pixel \
 	hardware/google/pixel/power-libperfmgr \
+	hardware/google/pixel/thermal \
 	hardware/samsung_slsi-linaro/exynos/cpboot
 
 # Stagefright shim
@@ -370,9 +371,15 @@ PRODUCT_PACKAGES += \
 	vendor.lineage.touch@1.0-service.samsung
 endif
 
-# Thermal
+# Thermal: Pixel's AIDL HAL reads the device's thermal_info_config.json
+# and wakes on the kernel's thermal netlink trip events instead of polling;
+# thermal_symlinks sets vendor.thermal.link_ready, which starts it.
 PRODUCT_PACKAGES += \
-	android.hardware.thermal@2.0-service.exynos
+	android.hardware.thermal-service.pixel \
+	thermal_symlinks
+
+PRODUCT_VENDOR_PROPERTIES += \
+	persist.vendor.enable.thermal.genl=true
 
 # USB
 PRODUCT_PACKAGES += \
