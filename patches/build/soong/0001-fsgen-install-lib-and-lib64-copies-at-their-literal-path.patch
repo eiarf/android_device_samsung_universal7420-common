@@ -1,0 +1,42 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: FAROVITUS <farovitus@gmail.com>
+Date: Wed, 11 Nov 2026 20:33:58 +0000
+Subject: [PATCH] fsgen: install lib and lib64 copies at their literal path
+
+My device keeps its vendor blobs in the system image, and its blob list
+copies some of them to both lib/ and lib64/. fsgen turns each copy into a
+generated prebuilt module, and for lib/ and lib64/ it picks a module type
+that builds both arch variants and puts the 64-bit one in lib64/, so the
+two copies of one blob collide with each other and the build stops.
+
+Install copies into lib/ and lib64/ with prebuilt_any at the literal
+destination path instead. Every Lineage 22.2 zeroflte ROM I built had
+this change; I made it in the build tree on 2026-11-11 and it was never
+saved anywhere else until now.
+
+Signed-off-by: FAROVITUS <farovitus@gmail.com>
+---
+diff --git a/fsgen/prebuilt_etc_modules_gen.go b/fsgen/prebuilt_etc_modules_gen.go
+index e4bb07c..27581bb 100644
+--- a/fsgen/prebuilt_etc_modules_gen.go
++++ b/fsgen/prebuilt_etc_modules_gen.go
+@@ -304,6 +304,16 @@ func createPrebuiltEtcModulesInDirectory(ctx android.LoadHookContext, partition,
+ 	moduleFactory := etcInstallPathToFactoryList[etcInstallPathKey]
+ 	relDestDirFromInstallDirBase, _ := filepath.Rel(etcInstallPathKey, destDir)
+ 
++	// A copy into lib/ or lib64/ installs one file at that exact path. The
++	// bitcode module type builds both arch variants and puts the 64-bit one
++	// in lib64/, so a blob copied to both lib/ and lib64/ (common on devices
++	// whose vendor files live in the system image) collides with itself.
++	// Install these with prebuilt_any at the literal destination instead.
++	if etcInstallPathKey == "lib" || etcInstallPathKey == "lib64" {
++		moduleFactory = etc.PrebuiltAnyFactory
++		relDestDirFromInstallDirBase = destDir
++	}
++
+ 	for fileIndex := range maxLen {
+ 		srcTuple := []srcBaseFileInstallBaseFileTuple{}
+ 		for _, srcFile := range android.SortedKeys(groupedDestFiles) {
+-- 
+2.50.1
+
