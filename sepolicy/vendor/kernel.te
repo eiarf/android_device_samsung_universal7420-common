@@ -17,6 +17,13 @@ allow kernel vendor_file:file r_file_perms;
 allow kernel vendor_configs_file:dir search;
 allow kernel vendor_configs_file:file r_file_perms;
 
+# Kernel 6.15 and later (the 6.18 GKI) also check system:firmware_load on
+# every firmware file the direct loader reads, against the file's label.
+# Android 16 QPR2 and later define the permission and grant it only for
+# the sysfs fallback (kernel self). The BT patch and regulatory.db sit in
+# /vendor/firmware, the Wi-Fi NVRAM in /vendor/etc/wifi.
+allow kernel { vendor_firmware_file vendor_configs_file }:system firmware_load;
+
 # The DMC driver's memlat sampler opens per-CPU PMU counters from a
 # kworker once the PMU has probed, after the policy is loaded.
 allow kernel self:perf_event cpu;
