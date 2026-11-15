@@ -96,10 +96,6 @@ endif
 PRODUCT_PACKAGES += \
 	libsuspend
 
-# ConfigStore
-PRODUCT_PACKAGES += \
-    disable_configstore
-
 # Kernel DT image. build/make passes $(PRODUCT_OUT)/dt.img to mkbootimg
 # as --dt when BOARD_KERNEL_SEPARATED_DT is true; with
 # BOARD_KERNEL_PREBUILT_DT hardware/samsung/mkbootimg.mk does not build
@@ -119,18 +115,9 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
 	android.hardware.drm-service.clearkey
 
-# DTB
-PRODUCT_HOST_PACKAGES += \
-	dtbhtoolExynos
-
-# FastCharge
-PRODUCT_PACKAGES += \
-	vendor.lineage.fastcharge@1.0-service.samsung
-
 # Filesystem tools for resizing system partitions
 PRODUCT_PACKAGES += \
-	e2fsck_static \
-	resize2fs_static
+	e2fsck_static
 
 # Fingerprint
 PRODUCT_PACKAGES += \
