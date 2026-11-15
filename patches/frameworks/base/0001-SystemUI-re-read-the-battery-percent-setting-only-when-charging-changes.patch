@@ -1,0 +1,46 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: FAROVITUS <farovitus@gmail.com>
+Date: Sun, 15 Nov 2026 16:08:20 +0200
+Subject: [PATCH] SystemUI: re-read the battery percent setting only when
+ charging changes
+
+BatteryMeterView.onBatteryLevelChanged() called updateShowPercent() on
+every battery broadcast while a cable was in. updateShowPercent() reads
+STATUS_BAR_SHOW_BATTERY_PERCENT through LineageSettings, a binder call to
+the settings provider, although that setting has its own content observer
+in BatteryMeterViewController. Only the charging state feeds the result
+from here, and the call was skipped exactly when charging stopped.
+
+On my phone (Exynos 7420, SystemUI on the A53 cores) a simpleperf
+profile of 8 battery broadcasts put 12 % of SystemUI's main-thread CPU
+time (about 6 ms per broadcast) in this read. BatteryService sends a broadcast for every new
+voltage while charging, so this ran several times a minute.
+
+Re-read the setting when charging starts or stops, which also fixes the
+missed update on unplug. Not built or tested yet.
+
+Signed-off-by: FAROVITUS <farovitus@gmail.com>
+---
+ .../src/com/android/systemui/battery/BatteryMeterView.java  | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/battery/BatteryMeterView.java b/packages/SystemUI/src/com/android/systemui/battery/BatteryMeterView.java
+index 2b858f5..705b391 100644
+--- a/packages/SystemUI/src/com/android/systemui/battery/BatteryMeterView.java
++++ b/packages/SystemUI/src/com/android/systemui/battery/BatteryMeterView.java
+@@ -260,7 +260,11 @@ public class BatteryMeterView extends LinearLayout implements DarkReceiver {
+         mAccessorizedDrawable.setBatteryLevel(level);
+         mCircleDrawable.setBatteryLevel(level);
+         updatePercentText();
+-        if (pluggedIn) {
++        // Whether the percent shows depends on the charging state; the Lineage
++        // setting itself has its own observer. Re-read it only when charging
++        // starts or stops, not on every battery broadcast while plugged in:
++        // each read is a binder call to the LineageSettings provider.
++        if (isCharging != wasCharging) {
+             updateShowPercent();
+         }
+ 
+-- 
+2.54.0 (Apple Git-157)
+
