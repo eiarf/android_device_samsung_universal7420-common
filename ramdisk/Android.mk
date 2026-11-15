@@ -1,14 +1,27 @@
 LOCAL_PATH := $(call my-dir)
+
+ifneq ($(filter noblelte nobleltecan nobleltedd nobleltedv nobleltejv nobleltektt nobleltelgt noblelteskt nobleltespr nobleltetmo nobleltextc nobleltezt zenlte zenltecan zenltedd zenltedv zenltejv zenltektt zenltelgt zenlteskt zenltetmo zenltexx zenltezt,$(TARGET_DEVICE)),)
+NK_FSTAB_SRC := etc/fstab.samsungexynos7420.noble
+else
+NK_FSTAB_SRC := etc/fstab.samsungexynos7420.zero
+endif
+
 include $(CLEAR_VARS)
 LOCAL_MODULE		:= fstab.samsungexynos7420
 LOCAL_MODULE_STEM 	:= fstab.samsungexynos7420
 LOCAL_MODULE_CLASS	:= ETC
-ifneq ($(filter noblelte nobleltecan nobleltedd nobleltedv nobleltejv nobleltektt nobleltelgt noblelteskt nobleltespr nobleltetmo nobleltextc nobleltezt zenlte zenltecan zenltedd zenltedv zenltejv zenltektt zenltelgt zenlteskt zenltetmo zenltexx zenltezt,$(TARGET_DEVICE)),)
-LOCAL_SRC_FILES		:= etc/fstab.samsungexynos7420.noble
-else
-LOCAL_SRC_FILES		:= etc/fstab.samsungexynos7420.zero
-endif
+LOCAL_SRC_FILES		:= $(NK_FSTAB_SRC)
 LOCAL_MODULE_PATH	:= $(TARGET_OUT_VENDOR_ETC)
+include $(BUILD_PREBUILT)
+
+# First-stage init reads its fstab only from a file; the device-tree fstab
+# is no longer read. The boot ramdisk copy mounts /system and /efs.
+include $(CLEAR_VARS)
+LOCAL_MODULE		:= fstab.samsungexynos7420_ramdisk
+LOCAL_MODULE_STEM 	:= fstab.samsungexynos7420
+LOCAL_MODULE_CLASS	:= ETC
+LOCAL_SRC_FILES		:= $(NK_FSTAB_SRC)
+LOCAL_MODULE_PATH	:= $(TARGET_RAMDISK_OUT)
 include $(BUILD_PREBUILT)
 
 include $(CLEAR_VARS)

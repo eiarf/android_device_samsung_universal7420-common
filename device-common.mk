@@ -314,6 +314,7 @@ PRODUCT_PACKAGES += \
 	init.samsungexynos7420.rc \
 	init.samsungexynos7420.usb.rc \
 	fstab.samsungexynos7420 \
+	fstab.samsungexynos7420_ramdisk \
 	init.baseband.rc \
 	init.touch.sh \
 	ueventd.samsungexynos7420.rc
