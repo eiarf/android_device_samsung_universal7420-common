@@ -96,10 +96,8 @@ endif
 PRODUCT_PACKAGES += \
 	libsuspend
 
-# Kernel DT image. build/make passes $(PRODUCT_OUT)/dt.img to mkbootimg
-# as --dt when BOARD_KERNEL_SEPARATED_DT is true; with
-# BOARD_KERNEL_PREBUILT_DT hardware/samsung/mkbootimg.mk does not build
-# it, so it is copied from prebuilt/.
+# Kernel DT image. mkbootimg.mk packs $(PRODUCT_OUT)/dt.img into the boot
+# and recovery images with --dt; it is copied from prebuilt/.
 PRODUCT_COPY_FILES += \
 	$(COMMON_PATH)/prebuilt/dt.img:dt.img
 
