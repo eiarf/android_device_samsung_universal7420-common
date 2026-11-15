@@ -181,10 +181,6 @@ genfscon sysfs /devices/platform/exynos-drm/uevent                  u:object_r:s
 genfscon sysfs /devices/platform/e2a00000.framebuffer/uevent        u:object_r:sysfs_gpu:s0
 genfscon sysfs /devices/platform/soc@0/14ac0000.gpu/uevent          u:object_r:sysfs_gpu:s0
 
-# 6.6: mdnie-compat provides the mdnie and lcd/panel attributes that the
-# LiveDisplay HAL drives.
-genfscon sysfs /devices/platform/mdnie-compat                       u:object_r:sysfs_mdnie:s0
-
 # Wakeup sources that system_suspend reads, at their 6.18 paths. The
 # S2MPS15 PMIC sits on HSI2C4 (13660000.i2c), whose DT alias i2c1 keeps
 # the bus number fixed.
