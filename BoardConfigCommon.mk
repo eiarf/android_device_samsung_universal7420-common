@@ -58,8 +58,7 @@ TARGET_NO_RADIOIMAGE := true
 # Compatibility Matrix
 DEVICE_MATRIX_FILE += $(COMMON_PATH)/compatibility_matrix.xml
 DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE += \
-    hardware/samsung/vintf/samsung_framework_compatibility_matrix.xml \
-    vendor/lineage/config/device_framework_matrix.xml
+    hardware/samsung/vintf/samsung_framework_compatibility_matrix.xml
 
 # Dexpreopt
 ifeq ($(HOST_OS),linux)
