@@ -185,10 +185,11 @@ genfscon sysfs /devices/platform/soc@0/14ac0000.gpu/uevent          u:object_r:s
 # LiveDisplay HAL drives.
 genfscon sysfs /devices/platform/mdnie-compat                       u:object_r:sysfs_mdnie:s0
 
-# 6.6 wakeup sources that system_suspend reads. The PMIC's i2c-gpio bus
-# number is assigned at probe (no DT alias).
+# Wakeup sources that system_suspend reads, at their 6.18 paths. The
+# S2MPS15 PMIC sits on HSI2C4 (13660000.i2c), whose DT alias i2c1 keeps
+# the bus number fixed.
 genfscon sysfs /devices/platform/soc@0/soc@0:usb@15400000/15400000.usb/wakeup u:object_r:sysfs_wakeup:s0
-genfscon sysfs /devices/platform/i2c-tsp-main-pmic/i2c-1/1-0066/s2mps15-rtc/rtc/rtc0/alarmtimer.0.auto/wakeup u:object_r:sysfs_wakeup:s0
+genfscon sysfs /devices/platform/soc@0/13660000.i2c/i2c-1/1-0066/s2mps15-rtc/rtc/rtc0/alarmtimer.0.auto/wakeup u:object_r:sysfs_wakeup:s0
 # The Shannon 333 modem (node mif_pdata, the stock name cbd looks for,
 # with cp_status/value, which cbd polls during the CP boot) and its
 # wakeup source, and the battery supply's own wakeup directory (the rest
@@ -203,14 +204,16 @@ genfscon sysfs /devices/platform/i2c-max77843/i2c-3/3-0066/max77843-fuelgauge/po
 genfscon sysfs /devices/platform/i2c-max77843/i2c-3/3-0066/max77843-charger/power_supply/max77843-charger/wakeup u:object_r:sysfs_wakeup:s0
 # The remaining device wakeup sources: the MAX77843 and S2MPS15 PMICs,
 # the MAX77843 charger device, the S2MPS15 RTC, the power and volume
-# keys, the Wi-Fi PCIe function and the Bluetooth UART (serdev).
+# keys, the MAX77843 MUIC, the Wi-Fi PCIe function and the Bluetooth
+# UART's serdev, which 6.18 puts under the serial core's port device.
 genfscon sysfs /devices/platform/i2c-max77843/i2c-3/3-0066/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/i2c-max77843/i2c-3/3-0066/max77843-charger/wakeup u:object_r:sysfs_wakeup:s0
-genfscon sysfs /devices/platform/i2c-tsp-main-pmic/i2c-1/1-0066/wakeup u:object_r:sysfs_wakeup:s0
-genfscon sysfs /devices/platform/i2c-tsp-main-pmic/i2c-1/1-0066/s2mps15-rtc/wakeup u:object_r:sysfs_wakeup:s0
+genfscon sysfs /devices/platform/i2c-max77843/i2c-3/3-0066/max77843-muic/wakeup u:object_r:sysfs_wakeup:s0
+genfscon sysfs /devices/platform/soc@0/13660000.i2c/i2c-1/1-0066/wakeup u:object_r:sysfs_wakeup:s0
+genfscon sysfs /devices/platform/soc@0/13660000.i2c/i2c-1/1-0066/s2mps15-rtc/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/gpio-keys/wakeup                   u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/157b0000.pcie/pci0000:00/0000:00:00.0/0000:01:00.0/wakeup u:object_r:sysfs_wakeup:s0
-genfscon sysfs /devices/platform/soc@0/11460000.serial/serial0/serial0-0/wakeup u:object_r:sysfs_wakeup:s0
+genfscon sysfs /devices/platform/soc@0/11460000.serial/11460000.serial:0/11460000.serial:0.0/serial0/serial0-0/wakeup u:object_r:sysfs_wakeup:s0
 # The BCM4773 bridge's wakeup source, inside the SPI1 tree that is
 # otherwise sysfs_ssp_iio.
 genfscon sysfs /devices/platform/soc@0/14d30000.spi/spi_master/spi1/spi1.0/wakeup u:object_r:sysfs_wakeup:s0
