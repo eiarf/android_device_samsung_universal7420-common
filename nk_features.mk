@@ -23,7 +23,10 @@ NK_HAS_SEC_TOUCH ?= false
 # device (max77693-haptic), so it uses the input-FF HAL in
 # hardware/vibrator, not Samsung's timed_output one.
 NK_HAS_VIBRATOR ?= true
-# IR blaster: the S6 has one, but the 6.6 kernel has no driver for it yet.
+# IR blaster: the S6 has one, but the kernel has no driver for it yet.
+# The IR HAL (android.hardware.ir-service.lineage) sends through rc-core's
+# LIRC device, /dev/lirc0, so the driver must register an rc-core
+# transmitter.
 NK_HAS_IR ?= false
 # mDNIe screen modes (AdvancedDisplay) drive Samsung's mdnie sysfs class.
 # The DRM panel driver has no mDNIe control, so their settings would
