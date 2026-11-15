@@ -318,10 +318,6 @@ PRODUCT_PACKAGES += \
 	init.touch.sh \
 	ueventd.samsungexynos7420.rc
 
-# SamsungDoze
-PRODUCT_PACKAGES += \
-	SamsungDoze
-
 # Sensor hub
 ifeq ($(NK_HAS_SENSORHUB),true)
 PRODUCT_PACKAGES += \
