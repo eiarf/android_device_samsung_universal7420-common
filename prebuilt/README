@@ -1,21 +1,21 @@
-Kernel 6.18.33-4k-g73d7464335a8, SM_G920F lineage-22.2-android15-6.18 commit 73d7464335a8, built with ./build.sh --zip (NDK clang 21).
+Kernel 6.18.33-4k-gf3ccfca590e7, SM_G920F lineage-22.2-android15-6.18 commit f3ccfca590e7, built with ./build.sh --zip (NDK clang 21).
 
 Image   S-Boot variant of arch/arm64/boot/Image: arm64 header text_offset
         (offset 8) set to 0x205000. S-Boot does not boot the unpatched Image.
         Wi-Fi (cfg80211, brcmfmac, rfkill) is built in; its firmware
         requests at probe wait for ueventd, which serves /vendor/firmware.
-        sha256 c6fd5fc4bf748316288a57d34d1cea723039bbabd6e3ebeca6a6d707fe5c45f0
+        sha256 8f71a48a7b939974cc7736857959d7ca8fec882c5956b9b0a1abdbcd52377d5d
 dt.img  dtbTool DT image, zeroflte EUR revisions 00-07, for the boot
         image's --dt slot.
         sha256 349704193d54914a730c2f71984a1292b9abe714c5d1a672723f6bc290a30a33
 
 modules/  the build's 149 loadable modules (*.ko), vermagic
-        6.18.33-4k-g73d7464335a8. BOARD_VENDOR_KERNEL_MODULES installs
+        6.18.33-4k-gf3ccfca590e7. BOARD_VENDOR_KERNEL_MODULES installs
         them in /vendor/lib/modules, and depmod at build time writes
         modules.dep there. The kernel refuses modules from a build with
         another config (their symbol CRCs differ).
         sha256 of the "shasum -a 256 *.ko" listing:
-        fb6c391c8b7b5cf0c71a11b4b508082159170030c74b3ce45b4dc977f807c9bb
+        0db8b8f0b1e724e3debab629b85822acb31f2b5e4427becd1fe63814f910bbfe
 
 Replace Image, dt.img and modules/ together, from one build, and update
 this file.
