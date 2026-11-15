@@ -10,7 +10,12 @@ ro.sf.blurs_are_expensive=1
 ro.zygote.disable_gl_preload=1
 debug.renderengine.backend=skiaglthreaded
 debug.sf.predict_hwc_composition_strategy=0
-debug.sf.enable_adpf_cpu_hint=true
+# SurfaceFlinger main on the A57s. Under ADPF its uclamp.min sits at 2-38,
+# which fits an A53, so it composited on cpu5 at 400-600 MHz and apps
+# waited 4-5 ms for a free buffer. A fixed uclamp.min of 600 keeps it on
+# the big cores (with kernel e147acb6); about +50 mA.
+debug.sf.enable_adpf_cpu_hint=false
+ro.surface_flinger.uclamp.min=600
 debug.hwui.use_hint_manager=true
 
 # Media. No IOmx service is declared, so the default Codec2 input surface
