@@ -25,7 +25,9 @@ NK_HAS_SEC_TOUCH ?= false
 NK_HAS_VIBRATOR ?= true
 # IR blaster: the S6 has one, but the 6.6 kernel has no driver for it yet.
 NK_HAS_IR ?= false
-# mDNIe screen modes (LiveDisplay, AdvancedDisplay) drive Samsung's mdnie
-# sysfs class. The 6.6 DRM panel driver has no mDNIe control, so their
-# settings would change nothing; colour transforms belong in the HWC.
+# mDNIe screen modes (AdvancedDisplay) drive Samsung's mdnie sysfs class.
+# The DRM panel driver has no mDNIe control, so their settings would
+# change nothing; colour transforms belong in the HWC. A real mDNIe driver
+# would pair with hardware/samsung's AIDL LiveDisplay service
+# (vendor.lineage.livedisplay-service.samsung-exynos).
 NK_HAS_MDNIE ?= false
