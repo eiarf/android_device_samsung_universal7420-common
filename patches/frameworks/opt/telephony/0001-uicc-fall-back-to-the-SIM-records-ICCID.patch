@@ -1,4 +1,4 @@
-From d6c5a8e27e607487cd2a6ead857a73fe2f0ef754 Mon Sep 17 00:00:00 2001
+From 816c503e7eb10bf0879301e4b4667680dfb7f4c8 Mon Sep 17 00:00:00 2001
 From: FAROVITUS <farovitus@gmail.com>
 Date: Thu, 12 Nov 2026 13:40:24 +0200
 Subject: [PATCH] uicc: fall back to the SIM records ICCID when the card status
@@ -18,14 +18,15 @@ Treat an empty card status ICCID like a missing one. UiccPort returns
 the SIM records ICCID, and UiccSlot.getIccId() asks the port, so the
 inserted-SIM list also sees the card.
 
+Change-Id: I7c3168f0ba991f2f88c2ba3cc72c02ad3f91052c
 Signed-off-by: FAROVITUS <farovitus@gmail.com>
 ---
- .../android/internal/telephony/uicc/UiccPort.java    |  3 ++-
- .../android/internal/telephony/uicc/UiccSlot.java    | 12 +++++++++++-
- 2 files changed, 13 insertions(+), 2 deletions(-)
+ .../android/internal/telephony/uicc/UiccPort.java   |  3 ++-
+ .../android/internal/telephony/uicc/UiccSlot.java   | 13 ++++++++++++-
+ 2 files changed, 14 insertions(+), 2 deletions(-)
 
 diff --git a/src/java/com/android/internal/telephony/uicc/UiccPort.java b/src/java/com/android/internal/telephony/uicc/UiccPort.java
-index 8118a12..c823fe8 100644
+index 3f59582..a6fe4d5 100644
 --- a/src/java/com/android/internal/telephony/uicc/UiccPort.java
 +++ b/src/java/com/android/internal/telephony/uicc/UiccPort.java
 @@ -22,6 +22,7 @@ import android.os.IBinder;
@@ -46,15 +47,18 @@ index 8118a12..c823fe8 100644
          } else if (mUiccProfile != null) {
              return mUiccProfile.getIccId();
 diff --git a/src/java/com/android/internal/telephony/uicc/UiccSlot.java b/src/java/com/android/internal/telephony/uicc/UiccSlot.java
-index d986c93..3b890d5 100644
+index 700dd5f..245f0dd 100644
 --- a/src/java/com/android/internal/telephony/uicc/UiccSlot.java
 +++ b/src/java/com/android/internal/telephony/uicc/UiccSlot.java
-@@ -495,7 +495,17 @@ public class UiccSlot extends Handler {
+@@ -541,9 +541,20 @@ public class UiccSlot extends Handler {
       *  Use this API to get the iccId of the inactive port only.
       */
      public String getIccId(int portIdx) {
--        return mIccIds.get(portIdx);
-+        String iccId = mIccIds.get(portIdx);
++        String iccId;
+         synchronized (mLock) {
+-            return mIccIds.get(portIdx);
++            iccId = mIccIds.get(portIdx);
++        }
 +        if (TextUtils.isEmpty(iccId)) {
 +            // Legacy RILs send no ICCID in the card status; use the one the
 +            // port read from the SIM records instead.
@@ -63,11 +67,11 @@ index d986c93..3b890d5 100644
 +            if (port != null) {
 +                iccId = port.getIccId();
 +            }
-+        }
+         }
 +        return iccId;
      }
  
      public String getEid() {
 -- 
-2.54.0 (Apple Git-157)
+2.34.1
 
