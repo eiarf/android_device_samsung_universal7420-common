@@ -83,9 +83,6 @@ TARGET_USERIMAGES_USE_F2FS := true
 # HIDL
 PRODUCT_ENFORCE_VINTF_MANIFEST_OVERRIDE := true
 
-# HWUI
-HWUI_COMPILE_FOR_PERF := true
-
 # Kernel
 # The 6.6 kernel is built outside the ROM (SM_G920F ./build.sh --zip);
 # prebuilt/ holds its Image and the dtbTool DT image S-Boot reads from
@@ -101,7 +98,6 @@ TARGET_PREBUILT_KERNEL := $(COMMON_PATH)/prebuilt/Image
 # /vendor/lib/modules and runs depmod there; vendor/nk's init scripts
 # modprobe zram, audio and Bluetooth from it. Wi-Fi is built in.
 BOARD_VENDOR_KERNEL_MODULES := $(wildcard $(COMMON_PATH)/prebuilt/modules/*.ko)
-TARGET_LINUX_KERNEL_VERSION := 6.6
 # Kernel source for Lineage's headers_install only (device_kernel_headers);
 # the kernel itself is the prebuilt above. See prebuilt/README. This is the
 # 3.10 tree: Lineage installs one arm64 header set for both ABIs, and only
@@ -122,9 +118,6 @@ TARGET_HEALTH_CHARGING_CONTROL_CHARGING_DISABLED := 0
 TARGET_HEALTH_CHARGING_CONTROL_SUPPORTS_BYPASS := true
 TARGET_HEALTH_CHARGING_CONTROL_SUPPORTS_TOGGLE := true
 TARGET_HEALTH_CHARGING_CONTROL_SUPPORTS_DEADLINE := false
-
-# LMKD stats logging
-TARGET_LMKD_STATS_LOG := true
 
 # Manifest
 DEVICE_MANIFEST_FILE += $(COMMON_PATH)/manifest.xml
