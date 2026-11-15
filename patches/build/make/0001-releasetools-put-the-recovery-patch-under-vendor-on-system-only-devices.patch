@@ -1,0 +1,54 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: FAROVITUS <farovitus@gmail.com>
+Date: Sun, 15 Nov 2026 22:07:43 +0000
+Subject: [PATCH] releasetools: put the recovery patch under vendor/ on
+ system-only devices
+
+On a device without a vendor partition (TARGET_COPY_OUT_VENDOR is
+system/vendor), MakeRecoveryPatch writes recovery-from-boot.p at the root
+of the SYSTEM sink, so it lands in /system/recovery-from-boot.p. The
+install-recovery.sh written in the same call patches from
+/vendor/recovery-from-boot.p, which is /system/vendor/recovery-from-boot.p
+on such a device, and non_ab_ota.HasRecoveryPatch also looks for
+SYSTEM/vendor/recovery-from-boot.p. ota_from_target_files therefore stops
+on "assert HasRecoveryPatch" and no OTA zip is built.
+
+Write the patch beside the full recovery image path instead: at the root
+of VENDOR on a vendor-image device, as before, and in SYSTEM/vendor
+otherwise.
+
+Change-Id: I55697018ee8571a4484a0d4c3e9143afb8e72988
+Signed-off-by: FAROVITUS <farovitus@gmail.com>
+---
+ tools/releasetools/common.py | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/tools/releasetools/common.py b/tools/releasetools/common.py
+index fef646f..24aadca 100644
+--- a/tools/releasetools/common.py
++++ b/tools/releasetools/common.py
+@@ -3864,10 +3864,12 @@ def MakeRecoveryPatch(input_dir, output_sink, recovery_img, boot_img,
+   if board_uses_vendorimage:
+     # In this case, the output sink is rooted at VENDOR
+     recovery_img_path = "etc/recovery.img"
++    recovery_patch_path = "recovery-from-boot.p"
+     sh_dir = "bin"
+   else:
+     # In this case the output sink is rooted at SYSTEM
+     recovery_img_path = "vendor/etc/recovery.img"
++    recovery_patch_path = "vendor/recovery-from-boot.p"
+     sh_dir = "vendor/bin"
+ 
+   if full_recovery_image:
+@@ -3876,7 +3878,7 @@ def MakeRecoveryPatch(input_dir, output_sink, recovery_img, boot_img,
+   else:
+     d = Difference(recovery_img, boot_img)
+     _, _, patch = d.ComputePatch()
+-    output_sink("recovery-from-boot.p", patch)
++    output_sink(recovery_patch_path, patch)
+ 
+   try:
+     # The following GetTypeAndDevice()s need to use the path in the target
+-- 
+2.34.1
+
