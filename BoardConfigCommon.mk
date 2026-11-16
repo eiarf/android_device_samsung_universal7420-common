@@ -76,7 +76,11 @@ BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
 TARGET_SCREEN_DENSITY := 560
 
 # Filesystem
-BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := ext4
+# Android 17 keeps aconfig flag storage in /metadata, and system_server
+# aborts on the first flag it can't read. The CACHE partition is the
+# metadata partition, mounted in first stage; there is no cache image,
+# so /cache is the /data/cache link.
+BOARD_USES_METADATA_PARTITION := true
 BOARD_HAS_LARGE_FILESYSTEM := true
 TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_USERIMAGES_USE_F2FS := true
@@ -142,7 +146,6 @@ endif
 # Partitions
 BOARD_FLASH_BLOCK_SIZE := 131072
 BOARD_BOOTIMAGE_PARTITION_SIZE := 29360128
-BOARD_CACHEIMAGE_PARTITION_SIZE := 209715200
 BOARD_RECOVERYIMAGE_PARTITION_SIZE := 35651584
 BOARD_SYSTEMIMAGE_PARTITION_SIZE := 3124019200
 BOARD_ROOT_EXTRA_FOLDERS += efs cpefs
