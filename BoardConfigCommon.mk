@@ -146,8 +146,10 @@ endif
 # Partitions
 BOARD_FLASH_BLOCK_SIZE := 131072
 BOARD_BOOTIMAGE_PARTITION_SIZE := 29360128
-# The OTA tool sizes its block stash from the CACHE partition, even though
-# CACHE is /metadata now and no cache image is built.
+# The non-A/B OTA tool sizes its block stash from the CACHE partition, and
+# the build only passes cache_size on when it builds a cache image. CACHE
+# is /metadata now; the unused cache.img is never in the ROM zip.
+BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := ext4
 BOARD_CACHEIMAGE_PARTITION_SIZE := 209715200
 BOARD_RECOVERYIMAGE_PARTITION_SIZE := 35651584
 BOARD_SYSTEMIMAGE_PARTITION_SIZE := 3124019200
