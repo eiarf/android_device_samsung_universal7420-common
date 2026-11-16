@@ -1,0 +1,42 @@
+From 0736d7d799d5e7755e5f743b957d0113819ebf0a Mon Sep 17 00:00:00 2001
+From: FAROVITUS <farovitus@gmail.com>
+Date: Mon, 16 Nov 2026 01:34:00 +0000
+Subject: [PATCH] core: pass cache_size to misc_info without a cache image
+
+My non-A/B zeroflte mounts its CACHE partition as /metadata, so it has no
+/cache mount point and must not build a cache image. The non-A/B OTA tool
+still sizes its block stash from cache_size, and misc_info only carried
+that key when a cache image was built: without it blockimgdiff asserts in
+FindTransfers, and building the image instead fails CheckSize on the
+missing /cache fstab entry.
+
+Write cache_size into misc_info whenever the board sets
+BOARD_CACHEIMAGE_PARTITION_SIZE and builds no cache image.
+
+Change-Id: I26fe6cd4b1d74ab79ca8c35ac386015933a0f25a
+Signed-off-by: FAROVITUS <farovitus@gmail.com>
+---
+ core/Makefile | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/core/Makefile b/core/Makefile
+index 65c45cb..99803ae 100644
+--- a/core/Makefile
++++ b/core/Makefile
+@@ -6263,6 +6263,13 @@ ifneq (,$(strip $(BOARD_AVB_VBMETA_CUSTOM_PARTITIONS)))
+ endif # BOARD_AVB_VBMETA_CUSTOM_PARTITIONS
+ endif # BOARD_AVB_ENABLE
+ 	$(call generate-userimage-prop-dictionary, $@)
++ifndef BUILDING_CACHE_IMAGE
++ifdef BOARD_CACHEIMAGE_PARTITION_SIZE
++	@# A non-A/B device can keep its CACHE partition for another use and
++	@# build no cache image; the OTA tools still size the stash from it.
++	$(hide) echo "cache_size=$(BOARD_CACHEIMAGE_PARTITION_SIZE)" >> $@
++endif
++endif
+ ifeq ($(AB_OTA_UPDATER),true)
+ 	@# Include the build type in META/misc_info.txt so the server can easily differentiate production builds.
+ 	$(hide) echo "build_type=$(TARGET_BUILD_VARIANT)" >> $@
+-- 
+2.34.1
+
