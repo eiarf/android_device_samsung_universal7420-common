@@ -64,3 +64,8 @@ set_prop(vendor_init, vendor_hwc_prop)
 set_prop(vendor_init, vendor_powerhal_prop)
 set_prop(vendor_init, tee_prop)
 set_prop(vendor_init, vendor_radio_prop)
+
+# init loads /vendor/build.prop with vendor_init's rights; without this
+# persist.vendor.enable.thermal.genl=true is refused and the thermal HAL
+# polls instead of waking on netlink trip events.
+set_prop(vendor_init, vendor_thermal_prop)
