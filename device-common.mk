@@ -147,12 +147,13 @@ PRODUCT_COPY_FILES += \
 	frameworks/native/data/etc/android.hardware.location.gps.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.location.gps.xml
 endif
 
-# Graphics
+# Graphics: minigbm's AIDL allocator and stable-C mapper 5, from the same
+# minigbm source (patches/external/minigbm) as the buffers' handle layout
+# the gralloc0 module, Mesa and the HWC read.
 PRODUCT_PACKAGES += \
-	android.hardware.graphics.allocator@2.0-impl:64 \
-	android.hardware.graphics.allocator@2.0-service \
+	android.hardware.graphics.allocator-service.minigbm \
 	android.hardware.graphics.composer@2.1-service \
-	android.hardware.graphics.mapper@2.0-impl-2.1
+	mapper.minigbm
 
 # Health: the AIDL service also runs charger mode (vendor.charger)
 PRODUCT_PACKAGES += \

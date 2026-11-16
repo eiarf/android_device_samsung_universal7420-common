@@ -1,0 +1,57 @@
+From 975f9c094333f768ed4262d5c8f607914b80ce0b Mon Sep 17 00:00:00 2001
+From: FAROVITUS <farovitus@gmail.com>
+Date: Mon, 16 Nov 2026 00:15:07 +0000
+Subject: [PATCH] Add an exynos dumb backend
+
+The Galaxy S6 (Exynos 7420) mainline kernel's display driver is exynos
+DRM, and minigbm has no backend for it, so no driver probes and every
+allocation fails. A dumb-buffer backend named "exynos" covers it: the
+Mali-T760 runs on panfrost, which imports the dumb buffers by dma-buf.
+
+The same patch is on the gralloc0 module I build with the NDK
+(android_vendor_nk gfx/source/patches/minigbm-0001); this copy is for
+the AIDL allocator and mapper 5 built in the tree.
+
+Change-Id: I35d20051bb3d07d51cbcf03aaf74c78b6a3850f8
+Signed-off-by: FAROVITUS <farovitus@gmail.com>
+---
+ drv.c         | 3 ++-
+ dumb_driver.c | 1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drv.c b/drv.c
+index b74ed99..ac8ea4c 100644
+--- a/drv.c
++++ b/drv.c
+@@ -46,6 +46,7 @@ extern const struct backend backend_vc4;
+ 
+ // Dumb / generic drivers
+ extern const struct backend backend_evdi;
++extern const struct backend backend_exynos;
+ extern const struct backend backend_marvell;
+ extern const struct backend backend_mediatek;
+ extern const struct backend backend_meson;
+@@ -77,7 +78,7 @@ static const struct backend *drv_backend_list[] = {
+ #ifdef DRV_XE
+ 	&backend_xe,
+ #endif
+-	&backend_evdi,	    &backend_komeda,	&backend_marvell, &backend_mediatek,
++	&backend_evdi,	    &backend_exynos,	&backend_komeda,	&backend_marvell, &backend_mediatek,
+ 	&backend_meson,	    &backend_nouveau,	&backend_radeon,  &backend_rockchip,
+ 	&backend_sun4i_drm, &backend_synaptics, &backend_udl,	  &backend_virtgpu,
+ 	&backend_vkms,	    &backend_mock
+diff --git a/dumb_driver.c b/dumb_driver.c
+index 98c9ba7..287f224 100644
+--- a/dumb_driver.c
++++ b/dumb_driver.c
+@@ -66,6 +66,7 @@ static int dumb_bo_create_with_modifiers(struct bo *bo, uint32_t width, uint32_t
+ }
+ 
+ INIT_DUMB_DRIVER(evdi)
++INIT_DUMB_DRIVER(exynos)
+ INIT_DUMB_DRIVER(komeda)
+ INIT_DUMB_DRIVER(marvell)
+ INIT_DUMB_DRIVER(meson)
+-- 
+2.34.1
+

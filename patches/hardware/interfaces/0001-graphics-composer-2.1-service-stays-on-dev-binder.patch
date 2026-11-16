@@ -1,0 +1,39 @@
+From d88302f93d833d7cad011bcf0103fdae75089aaf Mon Sep 17 00:00:00 2001
+From: FAROVITUS <farovitus@gmail.com>
+Date: Mon, 16 Nov 2026 00:38:55 +0000
+Subject: [PATCH] graphics: composer 2.1 service stays on /dev/binder
+
+On Android 17 my Galaxy S6 uses minigbm's AIDL allocator and the
+stable-C mapper 5. libui loads mapper 5 only after servicemanager says
+the AIDL IAllocator is declared, and vndservicemanager always answers
+no. This service switched its process to /dev/vndbinder, so libui in
+the HWC never saw the allocator, found no HIDL mapper either, and
+aborted with "gralloc-mapper is missing".
+
+Keep the process on /dev/binder. The composer itself still registers
+over hwbinder; my HWC module starts no vndbinder services.
+
+Change-Id: Id1cb1a6d9358855ed0417f2e27bfa13d5a570671
+Signed-off-by: FAROVITUS <farovitus@gmail.com>
+---
+ graphics/composer/2.1/default/service.cpp | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/graphics/composer/2.1/default/service.cpp b/graphics/composer/2.1/default/service.cpp
+index 1276d2df..6f595a03 100644
+--- a/graphics/composer/2.1/default/service.cpp
++++ b/graphics/composer/2.1/default/service.cpp
+@@ -28,8 +28,8 @@ using android::hardware::graphics::composer::V2_1::IComposer;
+ using android::hardware::graphics::composer::V2_1::passthrough::HwcLoader;
+ 
+ int main() {
+-    // the conventional HAL might start binder services
+-    android::ProcessState::initWithDriver("/dev/vndbinder");
++    // Stay on /dev/binder: libui finds the AIDL allocator, and with it
++    // mapper 5, only through servicemanager.
+     android::ProcessState::self()->setThreadPoolMaxThreadCount(4);
+     android::ProcessState::self()->startThreadPool();
+ 
+-- 
+2.34.1
+
