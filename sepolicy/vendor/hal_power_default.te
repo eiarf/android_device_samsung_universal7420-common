@@ -44,3 +44,6 @@ typeattribute hal_power_default mlstrustedsubject;
 allow hal_power_default self:capability sys_nice;
 allow hal_power_default appdomain:process { getsched setsched };
 allow hal_power_default { surfaceflinger system_server hal_graphics_composer_default }:process setsched;
+
+# libperfmgr reads the thermal state from the thermal HAL on Android 17.
+hal_client_domain(hal_power_default, hal_thermal)
