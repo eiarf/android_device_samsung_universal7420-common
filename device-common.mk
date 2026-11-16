@@ -353,6 +353,7 @@ PRODUCT_SOONG_NAMESPACES += \
 	hardware/google/interfaces \
 	hardware/google/pixel \
 	hardware/google/pixel/power-libperfmgr \
+	hardware/google/pixel/pixelstats \
 	hardware/google/pixel/thermal \
 	hardware/samsung_slsi-linaro/exynos/cpboot
 
@@ -371,6 +372,7 @@ endif
 # thermal_symlinks sets vendor.thermal.link_ready, which starts it.
 PRODUCT_PACKAGES += \
 	android.hardware.thermal-service.pixel \
+	pixelatoms-cpp \
 	thermal_symlinks
 
 PRODUCT_VENDOR_PROPERTIES += \
