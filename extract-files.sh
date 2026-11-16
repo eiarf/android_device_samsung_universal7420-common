@@ -82,4 +82,12 @@ sed -i "s/SSLv3_client_method/SSLv23_method\x00\x00\x00\x00\x00\x00/" $BLOB_ROOT
 "${PATCHELF}" --replace-needed libutils.so libutils-v32.so $BLOB_ROOT/vendor/bin/hw/gpsd
 "${PATCHELF}" --replace-needed libutils.so libutils-v32.so $BLOB_ROOT/vendor/bin/hw/lhd
 
+# Android 17 has no VNDK, and vendor code can't load system-only libraries.
+# lhd and gpsd use no symbol from libicuuc or libgui; libsensor-mod takes
+# its two AppOpsManager symbols from sensor_shim.
+"${PATCHELF}" --remove-needed libicuuc.so --remove-needed libgui.so $BLOB_ROOT/vendor/bin/hw/lhd
+"${PATCHELF}" --remove-needed libicuuc.so $BLOB_ROOT/vendor/bin/hw/gpsd
+"${PATCHELF}" --remove-needed libpermission.so $BLOB_ROOT/vendor/lib/libsensor-mod.so
+"${PATCHELF}" --remove-needed libpermission.so $BLOB_ROOT/vendor/lib64/libsensor-mod.so
+
 "${MY_DIR}/setup-makefiles.sh"
