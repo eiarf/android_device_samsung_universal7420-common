@@ -53,12 +53,14 @@ on post-fs
 on late-fs
     # Start services for Boot Animation
     start servicemanager
-    # SurfaceFlinger needs the composer at once, and init cannot start a
-    # lazy HAL while it is blocked in mount_all --late below.
+    # SurfaceFlinger needs the composer and the allocator at once, and init
+    # cannot start a lazy HAL while it is blocked in mount_all --late below.
+    # The composer and SurfaceFlinger wait for the allocator, so it comes
+    # first.
+    start vendor.graphics.allocator
     start vendor.hwcomposer-2-1
     start surfaceflinger
     start bootanim
-    start vendor.gralloc-2-0
     
     # Mount RW partitions which need run fsck
     mount_all /vendor/etc/fstab.samsungexynos7420 --late
