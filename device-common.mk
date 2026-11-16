@@ -111,9 +111,9 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
 	android.hardware.drm-service.clearkey
 
-# Filesystem tools for resizing system partitions
-PRODUCT_PACKAGES += \
-	e2fsck_static
+# Grows the system filesystem to the SYSTEM partition after an install
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/releasetools/resize-system.sh:install/bin/resize-system.sh
 
 # Fingerprint
 PRODUCT_PACKAGES += \
