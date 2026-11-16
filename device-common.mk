@@ -346,6 +346,25 @@ endif
 PRODUCT_PACKAGES += \
 	sensor_shim
 
+# Android 17 has no VNDK apex. Install the vendor builds of the system
+# libraries the prebuilt Samsung blobs link against (rild and libsec-ril,
+# Widevine, skeymaster, the floating feature readers) and the 64-bit
+# libsecril-client for libsec_semRil and libwrappergps.
+PRODUCT_PACKAGES += \
+	android.hardware.drm@1.0.vendor \
+	android.hardware.drm@1.1.vendor \
+	android.hardware.radio.config@1.0.vendor \
+	android.hardware.radio.config@1.1.vendor \
+	android.hardware.radio.config@1.2.vendor \
+	android.hardware.radio.deprecated@1.0.vendor \
+	android.hidl.base@1.0.vendor \
+	libexpat.vendor \
+	libhidltransport.vendor \
+	libhwbinder.vendor \
+	libnetutils.vendor \
+	libsecril-client \
+	libsqlite.vendor
+
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += \
 	$(COMMON_PATH) \
