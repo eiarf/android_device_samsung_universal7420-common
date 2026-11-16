@@ -103,3 +103,10 @@ LOCAL_MODULE_CLASS      := EXECUTABLES
 LOCAL_SRC_FILES         := bin/init.touch.sh
 LOCAL_VENDOR_MODULE     := true
 include $(BUILD_PREBUILT)
+
+include $(CLEAR_VARS)
+LOCAL_MODULE            := init.postboot.sh
+LOCAL_MODULE_CLASS      := EXECUTABLES
+LOCAL_SRC_FILES         := bin/init.postboot.sh
+LOCAL_VENDOR_MODULE     := true
+include $(BUILD_PREBUILT)

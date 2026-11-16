@@ -333,6 +333,7 @@ PRODUCT_PACKAGES += \
 	fstab.samsungexynos7420 \
 	init.baseband.rc \
 	init.touch.sh \
+	init.postboot.sh \
 	ueventd.samsungexynos7420.rc
 
 # SamsungDoze

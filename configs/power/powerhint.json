@@ -18,8 +18,10 @@
                 "1500000",
                 "1300000",
                 "1200000",
+                "1000000",
                 "0"
             ],
+            "DefaultIndex": 3,
             "ResetOnInit": true
         },
         {
@@ -39,8 +41,10 @@
                 "1296000",
                 "1000000",
                 "800000",
+                "600000",
                 "0"
             ],
+            "DefaultIndex": 3,
             "ResetOnInit": true
         },
         {
@@ -49,8 +53,10 @@
             "Values": [
                 "50",
                 "30",
+                "15",
                 "0"
             ],
+            "DefaultIndex": 2,
             "ResetOnInit": true
         },
         {
@@ -61,6 +67,7 @@
                 "420000000",
                 "0"
             ],
+            "DefaultIndex": 1,
             "ResetOnInit": true
         },
         {
@@ -307,8 +314,14 @@
             "HBoostOffMaxAvgDurRatio": 4.0,
             "HBoostSevereJankPidPu": 0.25,
             "HBoostSevereJankThreshold": 8,
-            "HBoostUclampMinCeilingRange": [480, 722],
-            "HBoostUclampMinFloorRange": [230, 410],
+            "HBoostUclampMinCeilingRange": [
+                480,
+                722
+            ],
+            "HBoostUclampMinFloorRange": [
+                230,
+                410
+            ],
             "JankCheckTimeFactor": 1.2,
             "LowFrameRateThreshold": 25,
             "MaxRecordsNum": 300

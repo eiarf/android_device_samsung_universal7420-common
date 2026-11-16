@@ -222,3 +222,4 @@
 
 # Touchscreen
 /(vendor|system/vendor)/bin/init\.touch\.sh     u:object_r:init_touch_sh_exec:s0
+/(vendor|system/vendor)/bin/init\.postboot\.sh  u:object_r:vendor_shell_exec:s0

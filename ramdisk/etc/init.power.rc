@@ -56,10 +56,7 @@ service vendor.touch-find /vendor/bin/init.touch.sh
     oneshot
     disabled
 
-on property:vendor.touch.inhibit=1 && property:vendor.touch.stmfts.input=*
-    write /sys/class/input/${vendor.touch.stmfts.input}/inhibited 1
-
-on property:vendor.touch.inhibit=0 && property:vendor.touch.stmfts.input=*
+on property:vendor.touch.inhibit=* && property:vendor.touch.stmfts.input=*
     write /sys/class/input/${vendor.touch.stmfts.input}/inhibited 0
 
 on property:vendor.touch.inhibit=1 && property:vendor.touch.touchkey.input=*
@@ -71,5 +68,12 @@ on property:vendor.touch.inhibit=0 && property:vendor.touch.touchkey.input=*
 # Pixel's power HAL waits for vendor.powerhal.init before it starts its
 # looper and applies powerhint.json; Pixel devices set it from their own
 # init rc once boot has completed.
+service vendor.postboot /vendor/bin/init.postboot.sh
+    user root
+    group root system
+    oneshot
+    disabled
+
 on property:sys.boot_completed=1
     setprop vendor.powerhal.init 1
+    start vendor.postboot
