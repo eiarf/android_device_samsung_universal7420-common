@@ -110,3 +110,10 @@ LOCAL_MODULE_CLASS      := EXECUTABLES
 LOCAL_SRC_FILES         := bin/init.postboot.sh
 LOCAL_VENDOR_MODULE     := true
 include $(BUILD_PREBUILT)
+
+include $(CLEAR_VARS)
+LOCAL_MODULE            := set_resolution.sh
+LOCAL_MODULE_CLASS      := EXECUTABLES
+LOCAL_SRC_FILES         := bin/set_resolution.sh
+LOCAL_VENDOR_MODULE     := true
+include $(BUILD_PREBUILT)
