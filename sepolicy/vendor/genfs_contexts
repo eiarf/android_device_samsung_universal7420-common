@@ -206,6 +206,7 @@ genfscon sysfs /devices/platform/i2c-max77843/i2c-3/3-0066/max77843-charger/powe
 # keys, the Wi-Fi PCIe function and the Bluetooth UART (serdev).
 genfscon sysfs /devices/platform/i2c-max77843/i2c-3/3-0066/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/i2c-max77843/i2c-3/3-0066/max77843-charger/wakeup u:object_r:sysfs_wakeup:s0
+genfscon sysfs /devices/platform/i2c-max77843/i2c-3/3-0066/max77843-muic/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/i2c-tsp-main-pmic/i2c-1/1-0066/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/i2c-tsp-main-pmic/i2c-1/1-0066/s2mps15-rtc/wakeup u:object_r:sysfs_wakeup:s0
 genfscon sysfs /devices/platform/gpio-keys/wakeup                   u:object_r:sysfs_wakeup:s0
