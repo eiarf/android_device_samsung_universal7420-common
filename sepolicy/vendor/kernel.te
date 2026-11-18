@@ -4,7 +4,7 @@
 allow kernel tmpfs:dir search;
 
 allow kernel kernel:capability chown;
-allow kernel self:capability { chown mknod sys_module};
+allow kernel self:capability { chown mknod sys_module net_bind_service };
 allow kernel self:system module_request;
 
 
@@ -20,3 +20,4 @@ allow kernel vendor_configs_file:file r_file_perms;
 # The DMC driver's memlat sampler opens per-CPU PMU counters from a
 # kworker once the PMU has probed, after the policy is loaded.
 allow kernel self:perf_event cpu;
+allow kernel self:capability2 perfmon;
