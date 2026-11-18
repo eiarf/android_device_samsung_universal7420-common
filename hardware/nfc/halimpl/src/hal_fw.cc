@@ -263,5 +263,12 @@ void fw_force_update(__attribute__((unused)) void *param) {
     fw->state = FW_W4_ENTER_UPDATEMODE_RSP;
     nfc_hal_info.flag |= HAL_FLAG_FORCE_FW_UPDATE;
     nfc_hal_info.state = HAL_STATE_FW;
+  } else {
+    OSI_loge("Failed to load FW image for forced update");
+    device_set_mode(NFC_DEV_MODE_OFF);
+    if (nfc_hal_info.state == HAL_STATE_OPEN || nfc_hal_info.state == HAL_STATE_FW)
+      nfc_stack_cback(HAL_NFC_OPEN_CPLT_EVT, HAL_NFC_STATUS_FAILED);
+    else
+      nfc_stack_cback(HAL_NFC_POST_INIT_CPLT_EVT, HAL_NFC_STATUS_FAILED);
   }
 }

@@ -165,6 +165,9 @@ void nfc_hal_open_sm(tNFC_HAL_MSG *msg) {
       device_set_mode(NFC_DEV_MODE_ON);
 
       if (bl->product < SNFC_N7) {
+        nfc_hal_info.state = HAL_STATE_FW;
+        nfc_hal_info.fw_info.state = FW_W4_NCI_RESET_VTS_RSP;
+
         hal_nci_send_reset();
         OSI_timer_start(nfc_hal_info.nci_timer, 1000,
                         (tOSI_TIMER_CALLBACK)fw_force_update, NULL);
@@ -651,7 +654,8 @@ void nfc_hal_fw_sm(tNFC_HAL_MSG *msg) {
               NCI_OID(pkt) != NCI_CORE_RESET ||
               NCI_STATUS(pkt) != NCI_STATUS_OK) {
             OSI_logd("Failed NCI CORE_RESET during NFC open");
-            nfc_stack_cback(HAL_NFC_POST_INIT_CPLT_EVT, HAL_NFC_STATUS_FAILED);
+            msg->event = HAL_EVT_COMPLETE_FAILED;
+            nfc_hal_state_switch(msg, HAL_STATE_OPEN);
           } else {
             fw->state = FW_W4_NCI_INIT_VTS_RSP;
             OSI_timer_start(nfc_hal_info.nci_timer, 1000,
@@ -666,7 +670,9 @@ void nfc_hal_fw_sm(tNFC_HAL_MSG *msg) {
               NCI_OID(pkt) != NCI_CORE_INIT ||
               NCI_STATUS(pkt) != NCI_STATUS_OK) {
             OSI_logd("Failed NCI CORE_INIT during NFC open.");
-            nfc_stack_cback(HAL_NFC_POST_INIT_CPLT_EVT, HAL_NFC_STATUS_FAILED);
+            msg->event = HAL_EVT_COMPLETE_FAILED;
+            nfc_hal_state_switch(msg, HAL_STATE_OPEN);
+            break;
           }
           OSI_logd("OK! NCI CORE_INIT during NFC open");
           msg->event = HAL_EVT_COMPLETE;

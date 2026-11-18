@@ -228,11 +228,13 @@ static char *get_image_file_name(tIMAGE *image) {
   char product[3];
   char file_name_format[10] = "sec_s3nrn";
   sprintf(product, "%x", nfc_hal_info.fw_info.bl_info.product);
-  char *check_prod = strstr(file_name, product);
-  if (check_prod == NULL) {
-    OSI_logd("Product value in .conf differs from actual product, check config!! prod: %d, conf: %s", nfc_hal_info.fw_info.bl_info.product, file_name);
-    strncpy(file_name+strlen(file_name_format), product, 2); /* Replace file name with actual product */
-    OSI_logd("Changed file name: %s", file_name);
+  if (file_name[0] != '\0' && !strncmp(file_name, file_name_format, strlen(file_name_format))) {
+    char *check_prod = strstr(file_name, product);
+    if (check_prod == NULL) {
+      OSI_logd("Product value in .conf differs from actual product, check config!! prod: %d, conf: %s", nfc_hal_info.fw_info.bl_info.product, file_name);
+      strncpy(file_name+strlen(file_name_format), product, 2); /* Replace file name with actual product */
+      OSI_logd("Changed file name: %s", file_name);
+    }
   }
   return file_name;
 }
@@ -256,13 +258,15 @@ static char *get_image_file(tIMAGE *image, char *from) {
   if (from != NULL) {
     file_name = get_image_file_name(image);
 
-    // Looking at default root directory of storage
-    strncpy(file_path, from, sizeof(file_path) - 1);
-    strncat(file_path, "/", 1);
-    strncat(file_path, file_name, sizeof(file_path) - strlen(file_path));
-    if (stat(file_path, &attrib) == 0) return file_path;
+    if (file_name != NULL && file_name[0] != '\0') {
+      // Looking at default root directory of storage
+      strncpy(file_path, from, sizeof(file_path) - 1);
+      strncat(file_path, "/", 1);
+      strncat(file_path, file_name, sizeof(file_path) - strlen(file_path));
+      if (stat(file_path, &attrib) == 0 && S_ISREG(attrib.st_mode)) return file_path;
 
-    OSI_logd("File is not exist: %s", file_path);
+      OSI_logd("File is not exist: %s", file_path);
+    }
   }
 
   // support old version configuration (HAL 2.0 conf)

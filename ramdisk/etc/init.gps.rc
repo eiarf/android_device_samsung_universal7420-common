@@ -8,8 +8,9 @@ on fs
 # gpsd keeps its state in /data/system/gps. /data is mounted after fs,
 # so create the directory and clear the stale flags once it is there.
 on post-fs-data
-    mkdir /data/system/gps 0771 system system
-    chown system system /data/system/gps
+    mkdir /data/system/gps 0771 gps system
+    chown gps system /data/system/gps
+    chmod 0771 /data/system/gps
     rm /data/system/gps/gps_started
     rm /data/system/gps/glonass_started
     rm /data/system/gps/beidou_started

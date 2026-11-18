@@ -208,3 +208,16 @@
 /sys/devices/platform/i2c-max77843/i2c-*/*-0066/max77843-led/leds/rgb:status  trigger          0664  system  system
 /sys/devices/platform/i2c-max77843/i2c-*/*-0066/max77843-led/leds/rgb:status  delay_on         0664  system  system
 /sys/devices/platform/i2c-max77843/i2c-*/*-0066/max77843-led/leds/rgb:status  delay_off        0664  system  system
+
+# Samsung S3FWRN5 NFC
+/dev/sec-nfc              0660   nfc        nfc
+
+# MAX86900 Heart-Rate IIO
+/sys/devices/platform/soc@0/14e00000.i2c/i2c-*/iio:device*   buffer/enable                     0664   system   system
+/sys/devices/platform/soc@0/14e00000.i2c/i2c-*/iio:device*   buffer/length                     0664   system   system
+/sys/devices/platform/soc@0/14e00000.i2c/i2c-*/*/iio:device* buffer/enable                     0664   system   system
+/sys/devices/platform/soc@0/14e00000.i2c/i2c-*/*/iio:device* buffer/length                     0664   system   system
+/sys/devices/platform/soc@0/14e00000.i2c/i2c-*/*/iio:device* scan_elements/in_count_en         0664   system   system
+/sys/devices/platform/soc@0/14e00000.i2c/i2c-*/*/iio:device* scan_elements/in_intensity_ir_en  0664   system   system
+/sys/devices/platform/soc@0/14e00000.i2c/i2c-*/*/iio:device* scan_elements/in_intensity_red_en 0664   system   system
+/sys/devices/platform/soc@0/14e00000.i2c/i2c-*/*/iio:device* scan_elements/in_timestamp_en     0664   system   system

@@ -218,3 +218,9 @@ genfscon sysfs /devices/platform/soc@0/14d30000.spi/spi_master/spi1/spi1.0/wakeu
 # The MAX77843 MUIC's extcon device and its cable.N entries, read by
 # WiredAccessoryManager.
 genfscon sysfs /devices/platform/i2c-max77843/i2c-3/3-0066/max77843-muic/extcon u:object_r:sysfs_extcon:s0
+
+# MAX86900 Heart-Rate IIO sysfs tree under hsi2c_1 / 14e00000.i2c.
+genfscon sysfs /devices/platform/soc@0/14e00000.i2c                 u:object_r:sysfs_ssp_iio:s0
+
+# IR blaster virtual sensors symlink target.
+genfscon sysfs /devices/virtual/sensors/irled_remote                u:object_r:sysfs_sensors_writable:s0

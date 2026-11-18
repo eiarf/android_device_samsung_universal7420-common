@@ -14,3 +14,5 @@ allow gpsd gps_data_file:file create_file_perms;
 allow gpsd gps_data_file:fifo_file create_file_perms;
 
 dontaudit gpsd system_data_file:dir search;
+allow gpsd system_file:file r_file_perms;
+dontaudit gpsd radio_prop:file { read getattr map open };
